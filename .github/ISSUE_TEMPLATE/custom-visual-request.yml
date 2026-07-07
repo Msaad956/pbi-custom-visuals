@@ -1,0 +1,100 @@
+name: "🎨 Custom Visual Request"
+description: Request a new custom Power BI visual or a revision to an existing one.
+title: "[Visual Request]: "
+labels:
+  - visual-request
+  - needs-spec
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the visual in words, attach a reference image (mockup/screenshot/sketch/example), or both.
+        The request will be reviewed and a build specification will be confirmed before the coding agent starts implementation.
+
+  - type: dropdown
+    id: request_type
+    attributes:
+      label: Request type
+      options:
+        - New visual
+        - Revision to an existing visual
+    validations:
+      required: true
+
+  - type: input
+    id: existing_visual_name
+    attributes:
+      label: Existing visual name (if this is a revision)
+      description: Use the folder name under visuals/, for example radial-kpi-gauge.
+      placeholder: radial-kpi-gauge
+    validations:
+      required: false
+
+  - type: textarea
+    id: describe_visual
+    attributes:
+      label: Describe the visual
+      description: Include chart type, layout, colors, labels, animations, and expected behavior.
+      placeholder: |
+        Build a radial gauge KPI visual.
+        - Big central KPI value
+        - Progress arc from 0 to target
+        - Green/amber/red thresholds
+        - Optional subtitle and trend icon
+    validations:
+      required: true
+
+  - type: textarea
+    id: reference_image
+    attributes:
+      label: Reference image (optional)
+      description: Drag and drop or paste an image here (mockup, screenshot, or sketch). GitHub will host/embed it automatically.
+      placeholder: Paste or drag your image into this field.
+    validations:
+      required: false
+
+  - type: textarea
+    id: data_fields
+    attributes:
+      label: Data fields needed
+      description: Specify fields/measures this visual must bind to.
+      placeholder: |
+        - Category: Product
+        - Measure: Actual Sales
+        - Target Measure: Sales Target
+        - Tooltip fields: Region, Manager, Variance %
+    validations:
+      required: true
+
+  - type: textarea
+    id: formatting_options
+    attributes:
+      label: Formatting / styling options needed
+      description: Colors, fonts, borders, conditional formatting, axis/legend behavior, etc.
+      placeholder: |
+        - Arc color by threshold (red/amber/green)
+        - Font family and size controls
+        - Border toggle and radius
+        - Legend on/off with position options
+    validations:
+      required: false
+
+  - type: textarea
+    id: interactions
+    attributes:
+      label: Interactions
+      description: Tooltip behavior, cross-filtering/highlighting, selection, drill-down, animations, etc.
+      placeholder: |
+        - Standard Power BI tooltip
+        - Click to select/cross-filter
+        - Smooth gauge transition animation on update
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: Additional notes
+      placeholder: Any constraints, references, timelines, or acceptance notes.
+    validations:
+      required: false
