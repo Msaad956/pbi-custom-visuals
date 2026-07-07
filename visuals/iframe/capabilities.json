@@ -1,0 +1,69 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Embed Source",
+      "name": "embedSource",
+      "kind": "Measure",
+      "description": "A DAX measure returning a full <iframe ...></iframe> HTML tag or a direct HTTPS URL to embed"
+    }
+  ],
+  "dataViewMappings": [
+    {
+      "conditions": [
+        {
+          "embedSource": { "min": 0, "max": 1 }
+        }
+      ],
+      "single": {
+        "role": "embedSource"
+      }
+    }
+  ],
+  "objects": {
+    "toolbar": {
+      "properties": {
+        "show": { "type": { "bool": true } },
+        "position": {
+          "type": {
+            "enumeration": [
+              { "value": "topRight",    "displayName": "Top Right"    },
+              { "value": "topLeft",     "displayName": "Top Left"     },
+              { "value": "bottomRight", "displayName": "Bottom Right" },
+              { "value": "bottomLeft",  "displayName": "Bottom Left"  }
+            ]
+          }
+        },
+        "showHint": { "type": { "bool": true } },
+        "hintText": { "type": { "text": true } },
+        "signInLabel": { "type": { "text": true } },
+        "reloadLabel": { "type": { "text": true } }
+      }
+    },
+    "appearance": {
+      "properties": {
+        "showBorder": { "type": { "bool": true } },
+        "borderColor": { "type": { "fill": { "solid": { "color": true } } } },
+        "borderWidth": { "type": { "numeric": true } },
+        "backgroundColor": { "type": { "fill": { "solid": { "color": true } } } }
+      }
+    },
+    "behavior": {
+      "properties": {
+        "autoHideToolbar": { "type": { "bool": true } },
+        "loadTimeoutSeconds": { "type": { "numeric": true } }
+      }
+    }
+  },
+  "privileges": [
+    {
+      "name": "WebAccess",
+      "parameters": [
+        "https://app.powerbi.com/*",
+        "https://*.powerbi.com/*"
+      ]
+    }
+  ],
+  "supportsLandingPage": true,
+  "supportsEmptyDataView": true,
+  "supportsSynchronizingFilterState": false
+}

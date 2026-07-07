@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/core-build/pbiviz.schema.json",
+  "visual": {
+    "name": "iframeVisual",
+    "displayName": "Iframe",
+    "guid": "iframeVisualA1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "Displays an embedded iframe from a DAX measure returning an <iframe> HTML tag or HTTPS URL. Includes Sign In / Reload toolbar for Power BI organizational embed links.",
+    "supportUrl": "https://github.com/Msaad956/pbi-custom-visuals",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "5.9.0",
+  "author": {
+    "name": "pbi-custom-visuals",
+    "email": "support@example.com"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null
+}
