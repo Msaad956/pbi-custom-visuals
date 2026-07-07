@@ -1,0 +1,25 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/core-build/pbiviz.schema.json",
+  "visual": {
+    "name": "multiColorHeatmap",
+    "displayName": "Multi-Color Heatmap",
+    "guid": "multiColorHeatmapF3A2B1C4D5E6F7A8B9C0D1E2F3A4B5C6",
+    "visualClassName": "Visual",
+    "version": "1.0.0.0",
+    "description": "A 2D grid heatmap with X/Y axes and a configurable 5-stop color gradient (Min → Low → Mid → High → Max). Supports tooltips and cross-filter selection.",
+    "supportUrl": "https://github.com/Msaad956/pbi-custom-visuals",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "5.9.0",
+  "author": {
+    "name": "pbi-custom-visuals",
+    "email": "support@example.com"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null
+}
