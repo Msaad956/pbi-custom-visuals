@@ -20,6 +20,10 @@ const toolbarPositionItems: powerbi.IEnumMember[] = [
     { value: "bottomLeft",  displayName: "Bottom Left"  }
 ];
 
+// ─── Default text constants ───────────────────────────────────────────────────
+
+const DEFAULT_HINT_TEXT = "If the dashboard doesn't load, click Sign In, complete login in the new tab, then click Reload.";
+
 // ─── Toolbar Card ─────────────────────────────────────────────────────────────
 
 /**
@@ -54,8 +58,8 @@ class ToolbarCard extends formattingSettings.SimpleCard {
         name: "hintText",
         displayName: "Hint Text",
         description: "Text shown in the hint banner (leave empty for default)",
-        value: "If the dashboard doesn't load, click Sign In, complete login in the new tab, then click Reload.",
-        placeholder: "If the dashboard doesn't load, click Sign In, complete login in the new tab, then click Reload."
+        value: DEFAULT_HINT_TEXT,
+        placeholder: DEFAULT_HINT_TEXT
     });
 
     public signInLabel: formattingSettings.TextInput = new formattingSettings.TextInput({

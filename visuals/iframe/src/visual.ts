@@ -392,7 +392,8 @@ export class Visual implements IVisual {
             // Update hint text node (the last child is the text node appended in buildDom)
             const lastChild = this.hintBanner.lastChild;
             if (lastChild && lastChild.nodeType === Node.TEXT_NODE) {
-                lastChild.textContent = tb.hintText.value ||
+                // Fall back to the settings default when value is empty
+                lastChild.textContent = tb.hintText.value || tb.hintText["defaultValue"] ||
                     "If the dashboard doesn't load, click Sign In, complete login in the new tab, then click Reload.";
             }
         } else {
