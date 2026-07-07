@@ -114,7 +114,7 @@ export class Visual implements IVisual {
         this.selectionManager = this.host.createSelectionManager();
         this.formattingSettingsService = new FormattingSettingsService();
 
-        // Initialise with defaults so getFormattingModel() works before first update
+        // Initialize with defaults so getFormattingModel() works before first update
         this.formattingSettings = new VisualFormattingSettingsModel();
 
         // Root SVG — fills the visual's iframe
