@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": [
+      "ES6",
+      "dom"
+    ],
+    "module": "ES2015",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "declaration": true,
+    "outDir": ".tmp/build/",
+    "rootDir": ".",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "typeRoots": ["./node_modules"],
+    "types": ["powerbi-visuals-api"]
+  },
+  "files": [
+    "./src/visual.ts"
+  ]
+}

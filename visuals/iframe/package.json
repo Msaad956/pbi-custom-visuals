@@ -1,0 +1,19 @@
+{
+  "name": "iframe-visual",
+  "version": "1.0.0",
+  "description": "Iframe Power BI Custom Visual — display embedded Power BI dashboards with Sign In / Reload UX",
+  "scripts": {
+    "start": "pbiviz start",
+    "package": "pbiviz package",
+    "build": "pbiviz package",
+    "lint": "eslint src --ext .ts"
+  },
+  "devDependencies": {
+    "powerbi-visuals-tools": "^5.4.0",
+    "typescript": "~5.3.3"
+  },
+  "dependencies": {
+    "powerbi-visuals-api": "~5.9.0",
+    "powerbi-visuals-utils-formattingmodel": "^6.0.3"
+  }
+}
