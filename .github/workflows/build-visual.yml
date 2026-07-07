@@ -16,6 +16,9 @@ on:
         required: false
         type: string
 
+permissions:
+  contents: read
+
 jobs:
   detect-changed-visuals:
     name: Detect changed visuals
