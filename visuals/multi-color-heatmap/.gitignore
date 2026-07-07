@@ -1,0 +1,3 @@
+# Build artifacts specific to this visual
+webpack.statistics.*.html
+pbiviz-error.log
