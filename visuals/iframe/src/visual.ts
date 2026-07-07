@@ -95,7 +95,8 @@ function extractUrl(raw: string): string {
     }
 
     // No iframe tag — accept a raw URL that starts with https:// or http://.
-    // (http:// will pass through extractUrl but be rejected by validateUrl with a clear message.)
+    // http:// URLs are intentionally allowed through extraction so validateUrl can
+    // return the specific "Only HTTPS URLs are permitted" error rather than "unrecognized".
     const trimmed = raw.trim();
     if (/^https?:\/\//i.test(trimmed)) {
         return trimmed;
@@ -154,7 +155,7 @@ export class Visual implements IVisual {
     // State
     private currentUrl: string = "";
     private hintDismissed: boolean = false;
-    private loadTimeoutHandle: number | null = null;
+    private loadTimeoutHandle: ReturnType<typeof setTimeout> | null = null;
     private loadedFired: boolean = false;
 
     constructor(options: VisualConstructorOptions) {
