@@ -1,0 +1,115 @@
+name: Build Power BI Custom Visuals
+
+on:
+  pull_request:
+    paths:
+      - visuals/**
+  push:
+    branches:
+      - main
+    paths:
+      - visuals/**
+  workflow_dispatch:
+    inputs:
+      visual_path:
+        description: "Optional visual path under visuals/ (example: visuals/radial-kpi-gauge)"
+        required: false
+        type: string
+
+jobs:
+  detect-changed-visuals:
+    name: Detect changed visuals
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.detect.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect visual folders
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          changed=""
+
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            manual_input="${{ inputs.visual_path }}"
+            if [[ -n "${manual_input}" ]]; then
+              if [[ "${manual_input}" =~ ^visuals/([^/]+)/?$ ]]; then
+                changed="${BASH_REMATCH[1]}"
+              else
+                echo "::error::visual_path must look like visuals/<visual-name>"
+                exit 1
+              fi
+            fi
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            base_sha="${{ github.event.pull_request.base.sha }}"
+            head_sha="${{ github.event.pull_request.head.sha }}"
+            changed=$(git diff --name-only "${base_sha}" "${head_sha}" | awk -F/ '/^visuals\/[^\/]+\// {print $2}' | sort -u)
+          else
+            if git rev-parse HEAD~1 >/dev/null 2>&1; then
+              changed=$(git diff --name-only HEAD~1 HEAD | awk -F/ '/^visuals\/[^\/]+\// {print $2}' | sort -u)
+            else
+              changed=$(git ls-files 'visuals/*/pbiviz.json' | awk -F/ '{print $2}' | sort -u)
+            fi
+          fi
+
+          if [[ -z "${changed}" ]]; then
+            echo 'matrix=[]' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          matrix=$(printf '%s\n' "${changed}" | jq -R -s -c 'split("\n") | map(select(length>0))')
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.visual }}
+    runs-on: ubuntu-latest
+    needs: detect-changed-visuals
+    if: ${{ needs.detect-changed-visuals.outputs.matrix != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        visual: ${{ fromJSON(needs.detect-changed-visuals.outputs.matrix) }}
+
+    defaults:
+      run:
+        working-directory: visuals/${{ matrix.visual }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate pbiviz project folder
+        shell: bash
+        run: |
+          if [[ ! -f pbiviz.json ]]; then
+            echo "::error::visuals/${{ matrix.visual }} is not a valid pbiviz project (pbiviz.json not found)."
+            exit 1
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Power BI Visuals tools
+        run: npm install -g powerbi-visuals-tools
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Package visual
+        run: pbiviz package
+
+      - name: Upload pbiviz artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.visual }}-pbiviz
+          path: visuals/${{ matrix.visual }}/dist/*.pbiviz
+          if-no-files-found: error
+          retention-days: 30

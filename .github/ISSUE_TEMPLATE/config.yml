@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question about this repo
+    url: https://github.com/Msaad956/pbi-custom-visuals/discussions
+    about: Ask general questions about how the visual factory pipeline works.
