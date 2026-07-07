@@ -22,7 +22,7 @@ const toolbarPositionItems: powerbi.IEnumMember[] = [
 
 // ─── Default text constants ───────────────────────────────────────────────────
 
-const DEFAULT_HINT_TEXT = "If the dashboard doesn't load, click Sign In, complete login in the new tab, then click Reload.";
+export const DEFAULT_HINT_TEXT = "If the dashboard doesn't load, click Sign In, complete login in the new tab, then click Reload.";
 
 // ─── Toolbar Card ─────────────────────────────────────────────────────────────
 

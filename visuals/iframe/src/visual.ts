@@ -35,7 +35,7 @@
 
 import powerbi from "powerbi-visuals-api";
 import { FormattingSettingsService } from "powerbi-visuals-utils-formattingmodel";
-import { VisualFormattingSettingsModel } from "./settings";
+import { VisualFormattingSettingsModel, DEFAULT_HINT_TEXT } from "./settings";
 
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions      = powerbi.extensibility.visual.VisualUpdateOptions;
@@ -48,30 +48,20 @@ import IVisual                  = powerbi.extensibility.visual.IVisual;
  * A URL is permitted when its hostname exactly matches an entry OR matches the
  * wildcard pattern (hostname ends with ".powerbi.com" or equals "powerbi.com").
  *
- * To support additional domains (e.g. an internal company portal), append both here
- * and to the `privileges[].parameters.urls` array in capabilities.json, then rebuild.
+ * To support additional domains (e.g. an internal company portal), update
+ * `isHostnameAllowed` below and add the URL to the `privileges[].parameters`
+ * array in capabilities.json, then rebuild. Power BI requires WebAccess domains
+ * to be explicitly pre-declared at build time.
  */
-const ALLOWED_HOSTNAMES: string[] = [
-    "app.powerbi.com",
-    "powerbi.com"
-];
 
 /**
  * Returns true when the hostname is app.powerbi.com, powerbi.com, or any
- * subdomain of powerbi.com (e.g. embed.powerbi.com, analysis.windows.net subdomains
- * forwarded through powerbi.com are NOT in scope — only *.powerbi.com patterns).
+ * subdomain of powerbi.com (e.g. embed.powerbi.com).
+ * This mirrors the WebAccess allow-list in capabilities.json.
  */
 function isHostnameAllowed(hostname: string): boolean {
     const h = hostname.toLowerCase();
-    for (const allowed of ALLOWED_HOSTNAMES) {
-        if (h === allowed) return true;
-        // Wildcard: *.powerbi.com — allow any subdomain
-        if (allowed.startsWith("*.") && (h === allowed.slice(2) || h.endsWith("." + allowed.slice(2)))) {
-            return true;
-        }
-    }
-    // Direct check for *.powerbi.com pattern
-    return h === "powerbi.com" || h.endsWith(".powerbi.com");
+    return h === "app.powerbi.com" || h === "powerbi.com" || h.endsWith(".powerbi.com");
 }
 
 // ─── URL Extraction ───────────────────────────────────────────────────────────
@@ -244,8 +234,11 @@ export class Visual implements IVisual {
         });
         this.hintBanner.appendChild(dismissBtn);
 
-        const hintTextNode = document.createTextNode("");
-        this.hintBanner.appendChild(hintTextNode);
+        // Dedicated span for the hint text — updated via textContent in update()
+        const hintTextSpan = el("span");
+        hintTextSpan.className = "iframe-hint-text";
+        hintTextSpan.textContent = DEFAULT_HINT_TEXT;
+        this.hintBanner.appendChild(hintTextSpan);
         this.toolbar.appendChild(this.hintBanner);
 
         // Button row
@@ -389,12 +382,10 @@ export class Visual implements IVisual {
         const showHint = tb.showHint.value !== false && !this.hintDismissed;
         if (showToolbar && showHint) {
             this.hintBanner.style.display = "block";
-            // Update hint text node (the last child is the text node appended in buildDom)
-            const lastChild = this.hintBanner.lastChild;
-            if (lastChild && lastChild.nodeType === Node.TEXT_NODE) {
-                // Fall back to the settings default when value is empty
-                lastChild.textContent = tb.hintText.value || tb.hintText["defaultValue"] ||
-                    "If the dashboard doesn't load, click Sign In, complete login in the new tab, then click Reload.";
+            // Update hint text via the dedicated span (safer than text node by index)
+            const hintTextSpan = this.hintBanner.querySelector(".iframe-hint-text");
+            if (hintTextSpan) {
+                hintTextSpan.textContent = tb.hintText.value || DEFAULT_HINT_TEXT;
             }
         } else {
             this.hintBanner.style.display = "none";
